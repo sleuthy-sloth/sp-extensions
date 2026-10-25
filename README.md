@@ -37,7 +37,42 @@ name installed families).
 
 ## Plugins
 
-None yet.
+| Plugin | What it does |
+| --- | --- |
+| [`move-to-tomorrow`](plugins/move-to-tomorrow/) | Reschedule what you didn't get to: **Move to tomorrow** in a task's context menu, or one header button that moves everything still due today (confirmation first). |
+
+### Install a plugin
+
+1. Zip the *contents* of the plugin folder (`manifest.json` must sit at the archive root):
+
+   ```sh
+   cd plugins/move-to-tomorrow
+   zip -r ../../move-to-tomorrow.zip manifest.json plugin.js
+   ```
+
+2. In Super Productivity: **Settings → Plugins → Upload plugin**, pick the zip.
+
+Plugins are stored per device — install on each one.
+
+### Plugin constraints worth knowing
+
+- `plugin.js` is evaluated as a function body in the app window: no top-level
+  `await`, `PluginAPI` is the global. Plugins are not sandboxed.
+- Hook handlers are raced against a **5 s timeout**, so nothing interactive
+  belongs in a hook. `move-to-tomorrow` therefore uses a header button plus a
+  task context menu entry instead of the `finishDay` hook.
+- `openDialog` resolves to the **label** of the clicked button (`undefined` when
+  dismissed), so confirm by comparing against your own button label.
+- `dueDay` is a local calendar day (`YYYY-MM-DD`) — build it from local date
+  parts, never `toISOString()`.
+- iOS runs plugins only while the app is open; there is no background execution
+  (reminders are scheduled as local notifications after sync).
+
+Each plugin folder carries a self-check where logic warrants one:
+
+```sh
+cd plugins/move-to-tomorrow && node test/verify.js
+```
 
 ## License
 

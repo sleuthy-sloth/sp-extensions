@@ -1,0 +1,14 @@
+{
+  "name": "Move Unfinished to Tomorrow",
+  "id": "move-unfinished-to-tomorrow",
+  "manifestVersion": 1,
+  "version": "0.1.0",
+  "minSupVersion": "19.0.0",
+  "description": "Move tasks you didn't get to onto tomorrow: one task from its context menu, or all of today's unfinished at once from a header button.",
+  "author": "sleuthy-sloth",
+  "icon": "event_available",
+  "type": "standard",
+  "iFrame": false,
+  "hooks": [],
+  "permissions": ["getTasks", "updateTask", "openDialog", "showSnack"]
+}
