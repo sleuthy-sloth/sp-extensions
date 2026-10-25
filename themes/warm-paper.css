@@ -42,7 +42,7 @@
   --transition-standard: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Airier rows than the flat default */
-  --task-list-row-gap: 6px;
+  --task-list-row-gap: 8px;
   --task-inner-padding-top-bottom: 8px;
   --task-first-line-min-height: 44px;
 }
@@ -51,7 +51,7 @@
 body {
   /* Public theme contract */
   --surface-0: #f3ebdd;
-  --surface-1: #faf5ec;
+  --surface-1: #f6edda;
   --surface-2: #fffcf5;
   --surface-3: #fffdf8;
   --surface-4: #ffffff;
@@ -60,17 +60,20 @@ body {
 
   --ink-strong: #2e2721;
   /* 0.72 not 0.66: on cream the 0.66 default lands at 3.97:1, below AA */
+/* 2026-10-25: bg deepened #faf5ec -> #f6edda so cards separate (1.06 -> 1.14:1);
+   periwinkle ramp deepened one step (primary-500 3.07 -> 4.10:1 on the new bg);
+   current-task tint 12% -> 20% so 'what am I doing now' reads at a glance. */
   --ink-muted: rgba(68, 59, 50, 0.72);
 
   --separator: #e7dcc9;
   --divider: rgba(68, 59, 50, 0.1);
   --scrim: rgba(62, 52, 42, 0.45);
-  --bg-overlay: rgba(250, 245, 236, 0.85);
+  --bg-overlay: rgba(246, 237, 218, 0.85);
 
   /* Accents: dusty periwinkle primary, apricot accent, clay warn */
-  --palette-primary-400: #8e99b8;
-  --palette-primary-500: #7b87a8;
-  --palette-primary-600: #5f6b91;
+  --palette-primary-400: #7e8aae;
+  --palette-primary-500: #667294;
+  --palette-primary-600: #55628a;
   --palette-accent-500: #b06f49;
   --palette-warn-500: #b0523f;
   --c-primary: var(--palette-primary-500);
@@ -96,15 +99,16 @@ body {
   --task-c-bg-done: rgba(68, 59, 50, 0.03);
   --task-c-selected-bg: color-mix(in srgb, var(--c-primary) 14%, #fffcf5);
   --task-c-multi-selected-bg: color-mix(in srgb, var(--c-primary) 18%, #fffcf5);
-  --task-c-current-bg: color-mix(in srgb, var(--c-accent) 12%, #fffcf5);
+  --task-c-current-bg: color-mix(in srgb, var(--c-accent) 20%, #fffcf5);
   --task-c-drag-drop-bg: color-mix(in srgb, var(--c-primary) 10%, #fffcf5);
   --sub-task-c-bg: #fffdf8;
   --sub-task-c-bg-done: #faf6ee;
   --sub-task-c-bg-in-selected: #fffdf8;
   --task-separator: transparent;
-  --task-border: none;
-  --task-border-color: transparent;
-  --task-shadow: 0 1px 2px rgba(88, 68, 48, 0.07);
+  --task-border: 1px solid #e9ddc9;
+  --task-border-color: #e9ddc9;
+  --sub-task-border-color: #e9ddc9;
+  --task-shadow: 0 1px 3px rgba(88, 68, 48, 0.14);
   --task-selected-shadow: 0 0 0 2px color-mix(in srgb, var(--c-primary) 35%, transparent);
 
   /* Notes, panels, inputs */
@@ -128,13 +132,13 @@ body {
   --text-color-most-intense: #221c16;
   --text-color-muted: var(--ink-muted);
   --sidenav-text: rgba(68, 59, 50, 0.9);
-  --sidenav-text-secondary: rgba(68, 59, 50, 0.6);
+  --sidenav-text-secondary: rgba(68, 59, 50, 0.8);
   --state-hover-alpha: 0.05;
   --state-focus-alpha: 0.08;
   --state-selected-alpha: 0.1;
 
   /* Opaque for the native Android status bar behind translucent system bars */
-  --system-surface: #faf5ec;
+  --system-surface: #f6edda;
 
   --scrollbar-thumb: rgba(120, 100, 78, 0.35);
   --scrollbar-thumb-hover: rgba(120, 100, 78, 0.6);
@@ -150,6 +154,12 @@ body.isDarkTheme {
   --surface-2: #2b2620;
   --surface-3: #322c25;
   --surface-4: #3a332b;
+/* Dark overrides for the light-only bg tokens: without these, any element
+   drawing on them keeps a near-white fill in dark mode. */
+  --bg-slightly-lighter: #2b2620;
+  --bg-lighter: #322c25;
+  --bg-lightest: #3a332b;
+  --bg-super-light: #3a332b;
   --ink: #ede4d6;
   --ink-on-channel: 237, 228, 214;
 
@@ -190,9 +200,10 @@ body.isDarkTheme {
   --sub-task-c-bg-done: #2b2620;
   --sub-task-c-bg-in-selected: #322c25;
   --task-separator: transparent;
-  --task-border: none;
-  --task-border-color: transparent;
-  --task-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --task-border: 1px solid #4a423a;
+  --task-border-color: #4a423a;
+  --sub-task-border-color: #4a423a;
+  --task-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   --task-selected-shadow: 0 0 0 2px color-mix(in srgb, var(--c-primary) 40%, transparent);
 
   --standard-note-bg: #322c25;
@@ -223,4 +234,15 @@ body.isDarkTheme {
   --scrollbar-track: transparent;
 
   font-family: var(--font-primary-stack);
+}
+
+/* ── Dark: scheduled-time badge legibility ────────────────────────────────── */
+/* Upstream (.time-badge/.repeat-date-badge in SP's _task-controls.scss) sets
+   no text color and uses var(--bg-lighter) as its dark-mode background. The
+   dark block above now maps --bg-lighter to a dark surface; this pins the
+   glyphs to full ink so the pair cannot drift back to muted-on-light. */
+body.isDarkTheme .time-badge,
+body.isDarkTheme .repeat-date-badge {
+  background: var(--bg-lighter);
+  color: var(--ink);
 }
