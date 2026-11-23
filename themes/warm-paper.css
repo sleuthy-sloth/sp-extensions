@@ -3,9 +3,19 @@
  * Install: Settings → General → Theme → Install theme.
  *
  * Design intent: cream paper instead of white, warm brown-grey ink instead of
- * black, soft rounded cards with tiny gaps instead of hairline rows, dusty
- * periwinkle + apricot accents, gentle motion. Light-first; a warm charcoal
- * dark variant is included so the theme does not break if dark mode is forced.
+ * black, soft rounded cards with tiny gaps instead of hairline rows, burnt
+ * orange primary + golden amber accent, gentle motion. Light-first; a warm
+ * charcoal dark variant is included so the theme does not break if dark mode
+ * is forced.
+ *
+ * v2 (2026-11-23): re-audited against SP's current theming contract
+ * (src/styles/_css-variables.scss, master). Contrast: light ink-muted
+ * 0.72 -> 0.75 (4.37:1 -> 4.72:1 on cream, now actually AA — the Oct 25
+ * fix fell just short), accent #9A7200 -> #8A6500 (3.77:1 -> 4.58:1),
+ * warn #B0523F -> #A04A38 (4.37:1 -> 5.11:1). Same hues, a shade darker.
+ * Coverage: SP's newer tokens that fell back to neutral grey / pure white
+ * now resolve warm — drag columns, sidenav hover, selected-task bg,
+ * progress track, improvement banner text, attachment controls.
  */
 
 /* Mode-independent: shape, depth, type, motion, density */
@@ -45,6 +55,10 @@
   --task-list-row-gap: 8px;
   --task-inner-padding-top-bottom: 8px;
   --task-first-line-min-height: 44px;
+
+  /* v2: done tasks dim to 0.4 not 0.3 — still clearly done, but readable
+     without leaning in. */
+  --task-is-done-dim-opacity: 0.4;
 }
 
 /* ── Light: warm paper ───────────────────────────────────────────────────── */
@@ -59,26 +73,46 @@ body {
   --ink-on-channel: 68, 59, 50;
 
   --ink-strong: #2e2721;
-  /* 0.72 not 0.66: on cream the 0.66 default lands at 3.97:1, below AA */
+  /* 0.75 not 0.72: on cream the 0.72 value lands at 4.37:1, still below AA;
+     0.75 reaches 4.72:1 on cream and 5.11:1 on cards. */
 /* 2026-10-25: bg deepened #faf5ec -> #f6edda so cards separate (1.06 -> 1.14:1);
    periwinkle ramp deepened one step (primary-500 3.07 -> 4.10:1 on the new bg);
    current-task tint 12% -> 20% so 'what am I doing now' reads at a glance. */
-  --ink-muted: rgba(68, 59, 50, 0.72);
+/* 2026-10-25: periwinkle primary replaced with burnt orange at Steven's pick
+   (500 #B45A1B, 4.08:1 on cream; 400 #C2691E, 600 #9C4A1A); accent moved from
+   copper #b06f49 to golden amber #9A7200 so 'selected task' (orange tint)
+   and 'current task' (gold tint) stay distinct now both are warm. Card
+   shadows deepened to the soft float of the mockup (layered contact +
+   ambient, warm-tinted) instead of the previous 1px whisper. */
+  --ink-muted: rgba(68, 59, 50, 0.75);
 
   --separator: #e7dcc9;
   --divider: rgba(68, 59, 50, 0.1);
   --scrim: rgba(62, 52, 42, 0.45);
   --bg-overlay: rgba(246, 237, 218, 0.85);
 
-  /* Accents: dusty periwinkle primary, apricot accent, clay warn */
-  --palette-primary-400: #7e8aae;
-  --palette-primary-500: #667294;
-  --palette-primary-600: #55628a;
-  --palette-accent-500: #b06f49;
-  --palette-warn-500: #b0523f;
+  /* Accents: burnt orange primary, golden amber accent, clay warn.
+     v2: accent #9A7200 -> #8A6500 (3.77:1 -> 4.58:1 on cream) and warn
+     #B0523F -> #A04A38 (4.37:1 -> 5.11:1) — same hues, a shade darker,
+     so accent/warn text actually meets AA. */
+  --palette-primary-400: #c2691e;
+  --palette-primary-500: #b45a1b;
+  --palette-primary-600: #9c4a1a;
+  --palette-accent-500: #8a6500;
+  --palette-warn-500: #a04a38;
   --c-primary: var(--palette-primary-500);
   --c-accent: var(--palette-accent-500);
   --c-warn: var(--palette-warn-500);
+
+  /* v2: status colors — warm-tinted to fit the palette instead of SP's
+     stock Material brights. Success is a muted sage (#4F7440, 4.62:1 on
+     cream — AA, vs stock #4CAF50 at 2.39:1); warning a golden ochre
+     (#B57A1A, 3.13:1 — passes the 3:1 UI bar, vs stock #FF9800 at 1.85:1);
+     danger unifies with the clay warn (#A04A38, 5.11:1). */
+  --color-success: #4f7440;
+  --success-green: #4f7440;
+  --color-warning: #b57a1a;
+  --color-danger: #a04a38;
 
   /* Surfaces */
   --bg: var(--surface-1);
@@ -108,7 +142,7 @@ body {
   --task-border: 1px solid #e9ddc9;
   --task-border-color: #e9ddc9;
   --sub-task-border-color: #e9ddc9;
-  --task-shadow: 0 1px 3px rgba(88, 68, 48, 0.14);
+  --task-shadow: 0 2px 4px rgba(88, 68, 48, 0.1), 0 8px 24px rgba(88, 68, 48, 0.14);
   --task-selected-shadow: 0 0 0 2px color-mix(in srgb, var(--c-primary) 35%, transparent);
 
   /* Notes, panels, inputs */
@@ -125,6 +159,19 @@ body {
   --divider-color: var(--divider);
   --chip-outline-color: #ddd0ba;
   --grid-color: #ece2d2;
+
+  /* v2 coverage — SP's newer tokens that fell back to neutral grey / pure
+     white on warm paper. All warm now: drag columns, sidenav hover,
+     selected-task bg, progress track, improvement banner text, attachments. */
+  --bg-drag-col: #f0e8d8;
+  --sidenav-hover-bg: rgba(88, 68, 48, 0.08);
+  --selected-task-bg-color: #fffdf8;
+  --progress-bg: rgba(120, 100, 78, 0.18);
+  --improvement-text: var(--ink);
+  --improvement-button-text: var(--ink-strong);
+  --attachment-control-bg: rgba(68, 59, 50, 0.06);
+  --attachment-control-border: rgba(68, 59, 50, 0.15);
+  --attachment-control-hover-bg: rgba(68, 59, 50, 0.12);
 
   /* Text + states */
   --text-color-less-intense: rgba(68, 59, 50, 0.9);
@@ -171,15 +218,23 @@ body.isDarkTheme {
   --scrim: rgba(10, 8, 6, 0.6);
   --bg-overlay: rgba(34, 30, 26, 0.85);
 
-  --palette-primary-400: #9aa5c4;
-  --palette-primary-500: #8b96b8;
-  --palette-primary-600: #7b87a8;
-  --palette-accent-500: #e0a183;
+  --palette-primary-400: #de9464;
+  --palette-primary-500: #d07b45;
+  --palette-primary-600: #bc6530;
+  --palette-accent-500: #d9a441;
   --palette-warn-500: #d98173;
   --brand: var(--palette-primary-400);
   --c-primary: var(--palette-primary-500);
   --c-accent: var(--palette-accent-500);
   --c-warn: var(--palette-warn-500);
+
+  /* v2: status colors, dark-mode mirrors of the light set. Warning is a
+     deeper ochre (#C98F2E) so it stays distinct from the brighter golden
+     accent (#D9A441); danger unifies with the dark clay warn. */
+  --color-success: #8fb573;
+  --success-green: #8fb573;
+  --color-warning: #c98f2e;
+  --color-danger: #d98173;
 
   --bg: var(--surface-1);
   --card-bg: var(--surface-2);
@@ -203,7 +258,7 @@ body.isDarkTheme {
   --task-border: 1px solid #4a423a;
   --task-border-color: #4a423a;
   --sub-task-border-color: #4a423a;
-  --task-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --task-shadow: 0 2px 4px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.45);
   --task-selected-shadow: 0 0 0 2px color-mix(in srgb, var(--c-primary) 40%, transparent);
 
   --standard-note-bg: #322c25;
@@ -219,6 +274,14 @@ body.isDarkTheme {
   --divider-color: var(--divider);
   --chip-outline-color: #4a423a;
   --grid-color: #3b342c;
+
+  /* v2 coverage — dark-mode mirrors of the light additions. Note
+     --bg-drag-col: without this, dark mode inherits the light default
+     rgb(242,242,242), a light-grey box inside the dark theme. */
+  --bg-drag-col: #2b2620;
+  --sidenav-hover-bg: rgba(237, 228, 214, 0.06);
+  --selected-task-bg-color: #322c25;
+  --progress-bg: rgba(237, 228, 214, 0.18);
 
   --text-color-less-intense: rgba(237, 228, 214, 0.9);
   --text-color-more-intense: var(--ink-strong);
