@@ -7,7 +7,15 @@ by [@sleuthy-sloth](https://github.com/sleuthy-sloth).
 
 | Theme | Direction |
 | --- | --- |
-| [`warm-paper.css`](themes/warm-paper.css) | Cream paper, warm brown-grey ink, soft rounded task cards with airy gaps, dusty periwinkle + apricot accents, gentle motion. Light-first with a warm charcoal dark variant. |
+| [`warm-paper.css`](themes/warm-paper.css) | Cream paper, warm brown-grey ink, soft rounded task cards with airy gaps, burnt-orange primary + golden-amber accent, gentle motion. Light-first with a warm charcoal dark variant. |
+
+### Screenshots
+
+Rendered previews with demo tasks — light Planner and dark Today.
+
+| Light — Planner | Dark — Today |
+| --- | --- |
+| ![Warm Paper, light mode — Planner](docs/screenshots/warm-paper-light.png) | ![Warm Paper, dark mode — Today](docs/screenshots/warm-paper-dark.png) |
 
 ### Install a theme
 
